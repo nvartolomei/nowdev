@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use clap::Parser;
 use linode_api::{
     apis::{
@@ -40,10 +41,14 @@ enum Command {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<()> {
     let args = Args::parse();
 
-    let access_token = std::fs::read_to_string("/Users/nv/.config/nowdev/token")?
+    let token_path = dirs::home_dir()
+        .with_context(|| "failed to infer user config dir".to_string())?
+        .join(".config/nowdev/token");
+    let access_token = std::fs::read_to_string(&token_path)
+        .with_context(|| format!("failed to read access token from: {:?}", token_path))?
         .trim()
         .to_string();
 
@@ -73,9 +78,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 },
             )
             .await
-            .unwrap();
-
-            println!("Created instance");
+            .with_context(|| "failed to create instance".to_string())?;
 
             let config = add_linode_config(
                 &linode_cfg,
@@ -92,7 +95,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     ..AddLinodeConfigRequest::default()
                 },
             )
-            .await?;
+            .await
+            .with_context(|| "failed to create instance config".to_string())?;
 
             println!("Added config");
 
@@ -103,7 +107,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     config_id: Some(config.id.unwrap()),
                 }),
             )
-            .await?;
+            .await
+            .with_context(|| "failed to boot instance".to_string())?;
 
             println!("https://cloud.linode.com/linodes/{}", instance.id.unwrap());
             println!("IP: {}", instance.ipv4.unwrap()[0]);
@@ -111,7 +116,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Command::Stop(_) => {
             let instances = get_linode_instances(&linode_cfg, None, None)
                 .await
-                .unwrap()
+                .with_context(|| "failed to get instances".to_string())?
                 .data
                 .unwrap();
             let instance = instances
@@ -124,7 +129,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             delete_linode_instance(&linode_cfg, instance.unwrap().id.unwrap())
                 .await
-                .unwrap();
+                .with_context(|| {
+                    format!(
+                        "failed to delete instance: {}",
+                        instance.unwrap().id.unwrap()
+                    )
+                })?;
             println!("Instance deleted");
         }
     }
