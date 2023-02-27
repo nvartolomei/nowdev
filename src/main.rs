@@ -23,8 +23,8 @@ struct Args {
 
 #[derive(Parser, Debug)]
 struct StartCommand {
-    #[clap(short, long, default_value = "4")]
-    cpu: u8,
+    #[clap(short, long, default_value = "4", value_parser = ["4", "16"])]
+    cpu: String,
 }
 
 #[derive(Parser, Debug)]
@@ -54,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match args.command {
         Command::Start(start_command) => {
-            let r#type = match start_command.cpu {
+            let r#type = match start_command.cpu.parse::<u32>().unwrap() {
                 4 => "g6-standard-4",
                 16 => "g6-standard-16",
                 _ => panic!("Invalid CPU count: {}", start_command.cpu),
