@@ -11,6 +11,7 @@ popd
 
 ```sh
 openapi-generator generate --generator-name rust \
+  --package-name linode-api \
   --input-spec ./linode/transformed-schema.json \
   --output linode-api
 ```

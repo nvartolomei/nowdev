@@ -1,0 +1,14 @@
+[workspace]
+members = ["linode-api"]
+
+[package]
+name = "nowdev"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+clap = { version = "4.1.6", features = ["derive"] }
+linode-api = { path = "./linode-api" }
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
