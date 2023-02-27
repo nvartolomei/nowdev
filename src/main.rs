@@ -1,5 +1,6 @@
 use anyhow::{Context, Result};
 use clap::Parser;
+use indoc::formatdoc;
 use linode_api::{
     apis::{
         configuration::Configuration,
@@ -14,6 +15,7 @@ use linode_api::{
         GetLinodeConfigs200ResponseDataInnerDevicesSda,
     },
 };
+use std::io::Write;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -110,8 +112,34 @@ async fn main() -> Result<()> {
             .await
             .with_context(|| "failed to boot instance".to_string())?;
 
+            let ipv4 = instance.ipv4.unwrap()[0].clone();
             println!("https://cloud.linode.com/linodes/{}", instance.id.unwrap());
-            println!("IP: {}", instance.ipv4.unwrap()[0]);
+            println!("IP: {}", ipv4.as_str());
+
+            let mut ssh_config = std::fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .open(
+                    dirs::home_dir()
+                        .with_context(|| "failed to infer user home dir".to_string())?
+                        .join(".ssh/config_nowdev"),
+                )
+                .with_context(|| "failed to open ssh config file".to_string())?;
+            ssh_config.write_all(
+                formatdoc! {"
+            Host nowdev-dev
+                HostName {0}
+                StrictHostKeyChecking no
+
+            Host nowdev-dev-tmux
+                HostName {0}
+                StrictHostKeyChecking no
+                RequestTTY yes
+                RemoteCommand tmux -CC new-session -A -s main
+            ", ipv4.as_str()}
+                .as_bytes(),
+            )?;
+            println!("Writing ssh configuration to ~/.ssh/config_nowdev");
         }
         Command::Stop(_) => {
             let instances = get_linode_instances(&linode_cfg, None, None)

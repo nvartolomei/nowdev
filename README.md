@@ -1,3 +1,22 @@
+## User guide
+
+Add to your `~/.ssh/config` `Include config_nowdev`
+
+```
+Usage: nowdev <COMMAND>
+
+Commands:
+  start  start a development environment
+  stop   stop a development environment
+  help   Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+```
+
+## Development
+
 ```sh
 brew install openapi-generator
 ```
