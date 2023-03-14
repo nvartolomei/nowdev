@@ -34,5 +34,5 @@ openapi-generator generate --generator-name rust \
   --input-spec ./linode/transformed-schema.json \
   --output linode-api
 
-cargo fmt --package linode-api && cargo clippy --fix --package linode-api
+cargo fmt --package linode-api && cargo clippy --fix --package linode-api --allow-staged --allow-dirty
 ```

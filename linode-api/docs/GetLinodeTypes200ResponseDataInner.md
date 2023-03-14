@@ -1,4 +1,4 @@
-# LinodeType
+# GetLinodeTypes200ResponseDataInner
 
 ## Properties
 

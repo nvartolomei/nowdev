@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use chrono::{DateTime, Utc};
 use clap::Parser;
 use indoc::formatdoc;
 use linode_api::{
@@ -8,11 +9,12 @@ use linode_api::{
             add_linode_config, boot_linode_instance, create_linode_instance,
             delete_linode_instance, get_linode_instances,
         },
+        linode_types_api::get_linode_type,
     },
     models::{
         AddLinodeConfigRequest, BootLinodeInstanceRequest, CreateLinodeInstanceRequest,
         GetLinodeConfigs200ResponseDataInnerDevices,
-        GetLinodeConfigs200ResponseDataInnerDevicesSda,
+        GetLinodeConfigs200ResponseDataInnerDevicesSda, GetLinodeInstances200ResponseDataInner,
     },
 };
 use std::io::Write;
@@ -33,6 +35,9 @@ struct StartCommand {
 #[derive(Parser, Debug)]
 struct StopCommand {}
 
+#[derive(Parser, Debug)]
+struct StatsCommand {}
+
 #[derive(clap::Subcommand, Debug)]
 enum Command {
     #[command(about = "start a development environment")]
@@ -40,6 +45,9 @@ enum Command {
 
     #[command(about = "stop a development environment")]
     Stop(StopCommand),
+
+    #[command()]
+    Stats(StatsCommand),
 }
 
 #[tokio::main]
@@ -142,20 +150,15 @@ async fn main() -> Result<()> {
             println!("Writing ssh configuration to ~/.ssh/config_nowdev");
         }
         Command::Stop(_) => {
-            let instances = get_linode_instances(&linode_cfg, None, None)
-                .await
-                .with_context(|| "failed to get instances".to_string())?
-                .data
-                .unwrap();
-            let instance = instances
-                .iter()
-                .find(|instance| instance.label == Some("dev".to_string()));
+            let instance = find_instance(&linode_cfg, "dev").await?;
             if instance.is_none() {
-                println!("No instance found");
+                println!("Instance not found");
                 return Ok(());
             }
 
-            delete_linode_instance(&linode_cfg, instance.unwrap().id.unwrap())
+            print_instance_stats(&linode_cfg, instance.as_ref().unwrap()).await?;
+
+            delete_linode_instance(&linode_cfg, instance.as_ref().unwrap().id.unwrap())
                 .await
                 .with_context(|| {
                     format!(
@@ -165,7 +168,60 @@ async fn main() -> Result<()> {
                 })?;
             println!("Instance deleted");
         }
+        Command::Stats(_) => {
+            let instance = find_instance(&linode_cfg, "dev").await?;
+            if instance.is_none() {
+                println!("Instance not found");
+                return Ok(());
+            }
+
+            print_instance_stats(&linode_cfg, instance.as_ref().unwrap()).await?;
+        }
     }
+
+    Ok(())
+}
+
+async fn find_instance(
+    linode_cfg: &Configuration,
+    name: &str,
+) -> Result<Option<GetLinodeInstances200ResponseDataInner>> {
+    let instances = get_linode_instances(linode_cfg, None, None)
+        .await
+        .with_context(|| "failed to get instances".to_string())?
+        .data
+        .unwrap();
+    let instance = instances
+        .iter()
+        .find(|instance| instance.label.as_ref().unwrap() == name);
+    Ok(instance.cloned())
+}
+
+async fn print_instance_stats(
+    linode_cfg: &Configuration,
+    instance: &GetLinodeInstances200ResponseDataInner,
+) -> Result<()> {
+    let created =
+        DateTime::parse_from_rfc3339(&format!("{}Z", instance.created.as_ref().unwrap())).unwrap();
+    let uptime = Utc::now().signed_duration_since(created);
+
+    println!(
+        "Uptime: {} hours and {} minutes",
+        &uptime.num_hours(),
+        &uptime.num_minutes() % 60
+    );
+    println!("Instance type: {}", instance.r#type.as_ref().unwrap());
+
+    let hourly_price = get_linode_type(linode_cfg, instance.r#type.as_ref().unwrap())
+        .await?
+        .price
+        .unwrap()
+        .hourly
+        .unwrap();
+
+    let cost = (uptime.num_seconds() as f64 / 3600.0).ceil() * hourly_price as f64;
+
+    println!("Cost: ${:.2} (per hour: ${})", cost, hourly_price);
 
     Ok(())
 }

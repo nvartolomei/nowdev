@@ -3,12 +3,22 @@ import RefParser from "json-schema-ref-parser";
 
 const inputSchema = await RefParser.parse("../openapi.yaml");
 
+inputSchema.components.schemas.LinodeType.properties.addons.properties.backups.properties.price.properties.hourly.type =
+  "number";
+inputSchema.components.schemas.LinodeType.properties.addons.properties.backups.properties.price.properties.monthly.type =
+  "number";
+
+inputSchema.components.schemas.LinodeType.properties.price.properties.hourly.type =
+  "number";
+inputSchema.components.schemas.LinodeType.properties.price.properties.monthly.type =
+  "number";
 delete inputSchema.components.schemas.Linode.properties.host_uuid.format;
 
 for (const path of Object.keys(inputSchema.paths)) {
   const isInstancesPath = path.startsWith("/linode/instances");
+  const isTypesPath = path.startsWith("/linode/types");
 
-  if (!isInstancesPath) {
+  if (!isInstancesPath && !isTypesPath) {
     delete inputSchema.paths[path];
   }
 }

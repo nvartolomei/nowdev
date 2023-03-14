@@ -11365,6 +11365,448 @@
           }
         ]
       }
+    },
+    "/linode/types": {
+      "x-linode-cli-command": "linodes",
+      "get": {
+        "tags": [
+          "Linode Types"
+        ],
+        "summary": "Types List",
+        "description": "Returns collection of Linode Types, including pricing and specifications for each Type. These are used when [creating](/docs/api/linode-instances/#linode-create) or [resizing](/docs/api/linode-instances/#linode-resize) Linodes.\n",
+        "x-linode-redoc-load-ids": true,
+        "operationId": "getLinodeTypes",
+        "x-linode-cli-action": "types",
+        "responses": {
+          "200": {
+            "description": "A collection of Linode Types.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Returns collection of Linode types, including pricing and specifications for each type. These are used when [creating](/docs/api/linode-instances/#linode-create) or [resizing](/docs/api/linode-instances/#linode-resize) Linodes.\n",
+                        "properties": {
+                          "id": {
+                            "readOnly": true,
+                            "type": "string",
+                            "description": "The ID representing the Linode Type.",
+                            "example": "g6-standard-2",
+                            "x-linode-cli-display": 1
+                          },
+                          "label": {
+                            "x-linode-filterable": true,
+                            "type": "string",
+                            "readOnly": true,
+                            "description": "The Linode Type's label is for display purposes only.\n",
+                            "example": "Linode 4GB",
+                            "x-linode-cli-display": 2
+                          },
+                          "disk": {
+                            "x-linode-filterable": true,
+                            "type": "integer",
+                            "readOnly": true,
+                            "description": "The Disk size, in MB, of the Linode Type.\n",
+                            "example": 81920,
+                            "x-linode-cli-display": 4
+                          },
+                          "class": {
+                            "x-linode-filterable": true,
+                            "type": "string",
+                            "readOnly": true,
+                            "description": "The class of the Linode Type. We currently offer five classes of Linodes:\n\n  * nanode - Nanode instances are good for low-duty workloads,\n    where performance isn't critical. **Note:** As of June 16th, 2020, Nanodes became\n    1 GB Linodes in the Cloud Manager, however, the API, the CLI, and billing will\n    continue to refer to these instances as Nanodes.\n  * standard - Standard Shared instances are good for medium-duty workloads and\n    are a good mix of performance, resources, and price. **Note:** As of June 16th, 2020,\n    Standard Linodes in the Cloud Manager became Shared Linodes, however, the API, the CLI, and\n    billing will continue to refer to these instances as Standard Linodes.\n  * dedicated - Dedicated CPU instances are good for full-duty workloads\n    where consistent performance is important.\n  * gpu - Linodes with dedicated NVIDIA Quadro &reg; RTX 6000 GPUs accelerate highly\n    specialized applications such as machine learning, AI, and video transcoding.\n  * highmem - High Memory instances favor RAM over other resources, and can be\n    good for memory hungry use cases like caching and in-memory databases.\n    All High Memory plans contain dedicated CPU cores.\n",
+                            "enum": [
+                              "nanode",
+                              "standard",
+                              "dedicated",
+                              "gpu",
+                              "highmem"
+                            ],
+                            "example": "standard",
+                            "x-linode-cli-display": 3
+                          },
+                          "price": {
+                            "type": "object",
+                            "readOnly": true,
+                            "description": "Cost in US dollars, broken down into hourly and monthly charges.\n",
+                            "properties": {
+                              "hourly": {
+                                "type": "number",
+                                "description": "Cost (in US dollars) per hour.",
+                                "example": 0.03,
+                                "x-linode-cli-display": 9
+                              },
+                              "monthly": {
+                                "type": "number",
+                                "description": "Cost (in US dollars) per month.",
+                                "example": 20,
+                                "x-linode-cli-display": 10
+                              }
+                            }
+                          },
+                          "addons": {
+                            "type": "object",
+                            "readOnly": true,
+                            "description": "A list of optional add-on services for Linodes and their associated costs.\n",
+                            "properties": {
+                              "backups": {
+                                "type": "object",
+                                "readOnly": true,
+                                "description": "Information about the optional Backup service offered for Linodes.\n",
+                                "properties": {
+                                  "price": {
+                                    "type": "object",
+                                    "description": "Cost of enabling Backups for this Linode Type.",
+                                    "properties": {
+                                      "hourly": {
+                                        "type": "number",
+                                        "description": "The cost (in US dollars) per hour to add Backups service.\n",
+                                        "example": 0.008
+                                      },
+                                      "monthly": {
+                                        "type": "number",
+                                        "description": "The cost (in US dollars) per month to add Backups service.\n",
+                                        "example": 5
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "network_out": {
+                            "x-linode-filterable": true,
+                            "type": "integer",
+                            "readOnly": true,
+                            "description": "The Mbits outbound bandwidth allocation.\n",
+                            "example": 1000,
+                            "x-linode-cli-display": 7
+                          },
+                          "memory": {
+                            "x-linode-filterable": true,
+                            "type": "integer",
+                            "readOnly": true,
+                            "description": "Amount of RAM included in this Linode Type.\n",
+                            "example": 4096,
+                            "x-linode-cli-display": 5
+                          },
+                          "successor": {
+                            "type": "string",
+                            "readOnly": true,
+                            "nullable": true,
+                            "description": "The Linode Type that a [mutate](/docs/api/linode-instances/#linode-upgrade) will upgrade to for a Linode of this type.  If \"null\", a Linode of this type may not mutate.\n",
+                            "example": null
+                          },
+                          "transfer": {
+                            "x-linode-filterable": true,
+                            "type": "integer",
+                            "readOnly": true,
+                            "description": "The monthly outbound transfer amount, in MB.\n",
+                            "example": 4000,
+                            "x-linode-cli-display": 8
+                          },
+                          "vcpus": {
+                            "x-linode-filterable": true,
+                            "type": "integer",
+                            "readOnly": true,
+                            "description": "The number of VCPU cores this Linode Type offers.\n",
+                            "example": 2,
+                            "x-linode-cli-display": 6
+                          },
+                          "gpus": {
+                            "x-linode-filterable": true,
+                            "type": "integer",
+                            "readOnly": true,
+                            "description": "The number of GPUs this Linode Type offers.\n",
+                            "example": 0,
+                            "x-linode-cli-display": 11
+                          }
+                        }
+                      }
+                    },
+                    "page": {
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The current [page](/docs/api/#pagination).",
+                      "example": 1
+                    },
+                    "pages": {
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The total number of [pages](/docs/api/#pagination).",
+                      "example": 1
+                    },
+                    "results": {
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The total number of results.",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl https://api.linode.com/v4/linode/types\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli linodes types\n"
+          }
+        ]
+      }
+    },
+    "/linode/types/{typeId}": {
+      "parameters": [
+        {
+          "name": "typeId",
+          "in": "path",
+          "description": "The ID of the Linode Type to look up.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "x-linode-cli-command": "linodes",
+      "get": {
+        "tags": [
+          "Linode Types"
+        ],
+        "summary": "Type View",
+        "description": "Returns information about a specific Linode Type, including pricing and specifications. This is used when [creating](/docs/api/linode-instances/#linode-create) or [resizing](/docs/api/linode-instances/#linode-resize) Linodes.\n",
+        "operationId": "getLinodeType",
+        "x-linode-cli-action": "type-view",
+        "responses": {
+          "200": {
+            "description": "A single Linode Type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Returns collection of Linode types, including pricing and specifications for each type. These are used when [creating](/docs/api/linode-instances/#linode-create) or [resizing](/docs/api/linode-instances/#linode-resize) Linodes.\n",
+                  "properties": {
+                    "id": {
+                      "readOnly": true,
+                      "type": "string",
+                      "description": "The ID representing the Linode Type.",
+                      "example": "g6-standard-2",
+                      "x-linode-cli-display": 1
+                    },
+                    "label": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "readOnly": true,
+                      "description": "The Linode Type's label is for display purposes only.\n",
+                      "example": "Linode 4GB",
+                      "x-linode-cli-display": 2
+                    },
+                    "disk": {
+                      "x-linode-filterable": true,
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The Disk size, in MB, of the Linode Type.\n",
+                      "example": 81920,
+                      "x-linode-cli-display": 4
+                    },
+                    "class": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "readOnly": true,
+                      "description": "The class of the Linode Type. We currently offer five classes of Linodes:\n\n  * nanode - Nanode instances are good for low-duty workloads,\n    where performance isn't critical. **Note:** As of June 16th, 2020, Nanodes became\n    1 GB Linodes in the Cloud Manager, however, the API, the CLI, and billing will\n    continue to refer to these instances as Nanodes.\n  * standard - Standard Shared instances are good for medium-duty workloads and\n    are a good mix of performance, resources, and price. **Note:** As of June 16th, 2020,\n    Standard Linodes in the Cloud Manager became Shared Linodes, however, the API, the CLI, and\n    billing will continue to refer to these instances as Standard Linodes.\n  * dedicated - Dedicated CPU instances are good for full-duty workloads\n    where consistent performance is important.\n  * gpu - Linodes with dedicated NVIDIA Quadro &reg; RTX 6000 GPUs accelerate highly\n    specialized applications such as machine learning, AI, and video transcoding.\n  * highmem - High Memory instances favor RAM over other resources, and can be\n    good for memory hungry use cases like caching and in-memory databases.\n    All High Memory plans contain dedicated CPU cores.\n",
+                      "enum": [
+                        "nanode",
+                        "standard",
+                        "dedicated",
+                        "gpu",
+                        "highmem"
+                      ],
+                      "example": "standard",
+                      "x-linode-cli-display": 3
+                    },
+                    "price": {
+                      "type": "object",
+                      "readOnly": true,
+                      "description": "Cost in US dollars, broken down into hourly and monthly charges.\n",
+                      "properties": {
+                        "hourly": {
+                          "type": "number",
+                          "description": "Cost (in US dollars) per hour.",
+                          "example": 0.03,
+                          "x-linode-cli-display": 9
+                        },
+                        "monthly": {
+                          "type": "number",
+                          "description": "Cost (in US dollars) per month.",
+                          "example": 20,
+                          "x-linode-cli-display": 10
+                        }
+                      }
+                    },
+                    "addons": {
+                      "type": "object",
+                      "readOnly": true,
+                      "description": "A list of optional add-on services for Linodes and their associated costs.\n",
+                      "properties": {
+                        "backups": {
+                          "type": "object",
+                          "readOnly": true,
+                          "description": "Information about the optional Backup service offered for Linodes.\n",
+                          "properties": {
+                            "price": {
+                              "type": "object",
+                              "description": "Cost of enabling Backups for this Linode Type.",
+                              "properties": {
+                                "hourly": {
+                                  "type": "number",
+                                  "description": "The cost (in US dollars) per hour to add Backups service.\n",
+                                  "example": 0.008
+                                },
+                                "monthly": {
+                                  "type": "number",
+                                  "description": "The cost (in US dollars) per month to add Backups service.\n",
+                                  "example": 5
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "network_out": {
+                      "x-linode-filterable": true,
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The Mbits outbound bandwidth allocation.\n",
+                      "example": 1000,
+                      "x-linode-cli-display": 7
+                    },
+                    "memory": {
+                      "x-linode-filterable": true,
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "Amount of RAM included in this Linode Type.\n",
+                      "example": 4096,
+                      "x-linode-cli-display": 5
+                    },
+                    "successor": {
+                      "type": "string",
+                      "readOnly": true,
+                      "nullable": true,
+                      "description": "The Linode Type that a [mutate](/docs/api/linode-instances/#linode-upgrade) will upgrade to for a Linode of this type.  If \"null\", a Linode of this type may not mutate.\n",
+                      "example": null
+                    },
+                    "transfer": {
+                      "x-linode-filterable": true,
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The monthly outbound transfer amount, in MB.\n",
+                      "example": 4000,
+                      "x-linode-cli-display": 8
+                    },
+                    "vcpus": {
+                      "x-linode-filterable": true,
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The number of VCPU cores this Linode Type offers.\n",
+                      "example": 2,
+                      "x-linode-cli-display": 6
+                    },
+                    "gpus": {
+                      "x-linode-filterable": true,
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The number of GPUs this Linode Type offers.\n",
+                      "example": 0,
+                      "x-linode-cli-display": 11
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl https://api.linode.com/v4/linode/types/g6-standard-2\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli linodes type-view g6-standard-2\n"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -16991,13 +17433,13 @@
             "description": "Cost in US dollars, broken down into hourly and monthly charges.\n",
             "properties": {
               "hourly": {
-                "type": "integer",
+                "type": "number",
                 "description": "Cost (in US dollars) per hour.",
                 "example": 0.03,
                 "x-linode-cli-display": 9
               },
               "monthly": {
-                "type": "integer",
+                "type": "number",
                 "description": "Cost (in US dollars) per month.",
                 "example": 20,
                 "x-linode-cli-display": 10
@@ -17019,12 +17461,12 @@
                     "description": "Cost of enabling Backups for this Linode Type.",
                     "properties": {
                       "hourly": {
-                        "type": "integer",
+                        "type": "number",
                         "description": "The cost (in US dollars) per hour to add Backups service.\n",
                         "example": 0.008
                       },
                       "monthly": {
-                        "type": "integer",
+                        "type": "number",
                         "description": "The cost (in US dollars) per month to add Backups service.\n",
                         "example": 5
                       }

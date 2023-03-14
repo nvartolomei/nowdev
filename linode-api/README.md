@@ -454,6 +454,8 @@ Class | Method | HTTP request | Description
 *LinodeInstancesApi* | [**update_linode_config**](docs/LinodeInstancesApi.md#update_linode_config) | **PUT** /linode/instances/{linodeId}/configs/{configId} | Configuration Profile Update
 *LinodeInstancesApi* | [**update_linode_instance**](docs/LinodeInstancesApi.md#update_linode_instance) | **PUT** /linode/instances/{linodeId} | Linode Update
 *LinodeInstancesApi* | [**update_linode_ip**](docs/LinodeInstancesApi.md#update_linode_ip) | **PUT** /linode/instances/{linodeId}/ips/{address} | IP Address Update
+*LinodeTypesApi* | [**get_linode_type**](docs/LinodeTypesApi.md#get_linode_type) | **GET** /linode/types/{typeId} | Type View
+*LinodeTypesApi* | [**get_linode_types**](docs/LinodeTypesApi.md#get_linode_types) | **GET** /linode/types | Types List
 
 
 ## Documentation For Models
@@ -557,6 +559,12 @@ Class | Method | HTTP request | Description
  - [GetLinodeStats200ResponseNetv6](docs/GetLinodeStats200ResponseNetv6.md)
  - [GetLinodeTransfer200Response](docs/GetLinodeTransfer200Response.md)
  - [GetLinodeTransferByYearMonth200Response](docs/GetLinodeTransferByYearMonth200Response.md)
+ - [GetLinodeTypes200Response](docs/GetLinodeTypes200Response.md)
+ - [GetLinodeTypes200ResponseDataInner](docs/GetLinodeTypes200ResponseDataInner.md)
+ - [GetLinodeTypes200ResponseDataInnerAddons](docs/GetLinodeTypes200ResponseDataInnerAddons.md)
+ - [GetLinodeTypes200ResponseDataInnerAddonsBackups](docs/GetLinodeTypes200ResponseDataInnerAddonsBackups.md)
+ - [GetLinodeTypes200ResponseDataInnerAddonsBackupsPrice](docs/GetLinodeTypes200ResponseDataInnerAddonsBackupsPrice.md)
+ - [GetLinodeTypes200ResponseDataInnerPrice](docs/GetLinodeTypes200ResponseDataInnerPrice.md)
  - [GetLinodeVolumes200Response](docs/GetLinodeVolumes200Response.md)
  - [GetLinodeVolumes200ResponseDataInner](docs/GetLinodeVolumes200ResponseDataInner.md)
  - [GooglePayData](docs/GooglePayData.md)
@@ -585,10 +593,6 @@ Class | Method | HTTP request | Description
  - [LinodeRequest](docs/LinodeRequest.md)
  - [LinodeStats](docs/LinodeStats.md)
  - [LinodeType](docs/LinodeType.md)
- - [LinodeTypeAddons](docs/LinodeTypeAddons.md)
- - [LinodeTypeAddonsBackups](docs/LinodeTypeAddonsBackups.md)
- - [LinodeTypeAddonsBackupsPrice](docs/LinodeTypeAddonsBackupsPrice.md)
- - [LinodeTypePrice](docs/LinodeTypePrice.md)
  - [LkeCluster](docs/LkeCluster.md)
  - [LkeClusterControlPlane](docs/LkeClusterControlPlane.md)
  - [LkeNodePool](docs/LkeNodePool.md)

@@ -9,6 +9,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.69"
+chrono = "0.4.24"
 clap = { version = "4.1.6", features = ["derive"] }
 dirs = "4.0.0"
 indoc = "2.0.0"
