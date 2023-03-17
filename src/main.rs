@@ -10,6 +10,7 @@ use linode_api::{
             delete_linode_instance, get_linode_instances,
         },
         linode_types_api::get_linode_type,
+        volumes_api::get_volumes,
     },
     models::{
         AddLinodeConfigRequest, BootLinodeInstanceRequest, CreateLinodeInstanceRequest,
@@ -19,6 +20,7 @@ use linode_api::{
 };
 use std::io::Write;
 
+/// A command line utility to manage remote development environments on Linode.
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
@@ -26,27 +28,30 @@ struct Args {
     command: Command,
 }
 
+/// Start a development environment.
 #[derive(Parser, Debug)]
 struct StartCommand {
     #[clap(short, long, default_value = "4", value_parser = ["4", "16"])]
     cpu: String,
 }
 
+/// Stop a development environment.
 #[derive(Parser, Debug)]
 struct StopCommand {}
 
+/// Show statistics (uptime, cost) for the development environment.
 #[derive(Parser, Debug)]
 struct StatsCommand {}
 
 #[derive(clap::Subcommand, Debug)]
 enum Command {
-    #[command(about = "start a development environment")]
+    #[command(about)]
     Start(StartCommand),
 
-    #[command(about = "stop a development environment")]
+    #[command(about)]
     Stop(StopCommand),
 
-    #[command()]
+    #[command(about)]
     Stats(StatsCommand),
 }
 
@@ -82,13 +87,24 @@ async fn main() -> Result<()> {
                     booted: Some(false),
                     r#type: r#type.to_string(),
                     region: "eu-west".to_string(),
-                    label: Some("dev".to_string()),
+                    label: Some("nowdev-dev".to_string()),
                     tags: Some(vec!["nowdev".to_string()]),
                     ..CreateLinodeInstanceRequest::default()
                 },
             )
             .await
             .with_context(|| "failed to create instance".to_string())?;
+
+            let volumes = get_volumes(&linode_cfg, None, None)
+                .await
+                .with_context(|| "failed to get volumes".to_string())?
+                .data
+                .unwrap();
+
+            let dev_volume = volumes
+                .iter()
+                .find(|v| v.label.as_ref().map(|l| l == "nowdev-dev").unwrap_or(false))
+                .expect("failed to find nowdev-dev volume");
 
             let config = add_linode_config(
                 &linode_cfg,
@@ -98,7 +114,7 @@ async fn main() -> Result<()> {
                     devices: Box::new(GetLinodeConfigs200ResponseDataInnerDevices {
                         sda: Some(Box::new(GetLinodeConfigs200ResponseDataInnerDevicesSda {
                             disk_id: None,
-                            volume_id: Some(898271),
+                            volume_id: Some(dev_volume.id.unwrap()),
                         })),
                         ..GetLinodeConfigs200ResponseDataInnerDevices::default()
                     }),
