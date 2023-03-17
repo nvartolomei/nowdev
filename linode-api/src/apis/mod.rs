@@ -94,5 +94,6 @@ pub fn parse_deep_object(prefix: &str, value: &serde_json::Value) -> Vec<(String
 
 pub mod linode_instances_api;
 pub mod linode_types_api;
+pub mod volumes_api;
 
 pub mod configuration;

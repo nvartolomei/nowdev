@@ -32,6 +32,7 @@ popd
 openapi-generator generate --generator-name rust \
   --package-name linode-api \
   --input-spec ./linode/transformed-schema.json \
+  --global-property apis,apiDocs=false,models,modelDocs=false,supportingFiles \
   --output linode-api
 
 cargo fmt --package linode-api && cargo clippy --fix --package linode-api --allow-staged --allow-dirty

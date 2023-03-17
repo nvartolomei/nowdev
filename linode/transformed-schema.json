@@ -11807,6 +11807,1872 @@
           }
         ]
       }
+    },
+    "/volumes": {
+      "x-linode-cli-command": "volumes",
+      "get": {
+        "x-linode-grant": "read_only",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of a collection to return.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items to return per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 25,
+              "maximum": 500,
+              "default": 100
+            }
+          }
+        ],
+        "summary": "Volumes List",
+        "description": "Returns a paginated list of Volumes you have permission to view.\n",
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "getVolumes",
+        "x-linode-cli-action": [
+          "list",
+          "ls"
+        ],
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_only"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array of all Volumes on your Account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "A Block Storage Volume associated with your Account.\n",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "The unique ID of this Volume.",
+                            "example": 12345,
+                            "readOnly": true,
+                            "x-linode-cli-display": 1
+                          },
+                          "label": {
+                            "x-linode-filterable": true,
+                            "type": "string",
+                            "description": "The Volume's label is for display purposes only.\n",
+                            "example": "my-volume",
+                            "minLength": 1,
+                            "maxLength": 32,
+                            "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                            "x-linode-cli-display": 2
+                          },
+                          "filesystem_path": {
+                            "type": "string",
+                            "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                            "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                            "readOnly": true
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                            "enum": [
+                              "creating",
+                              "active",
+                              "resizing"
+                            ],
+                            "example": "active",
+                            "readOnly": true,
+                            "x-linode-cli-display": 3,
+                            "x-linode-cli-color": {
+                              "active": "green",
+                              "contact_support": "red",
+                              "default_": "yellow"
+                            }
+                          },
+                          "size": {
+                            "type": "integer",
+                            "description": "The Volume's size, in GiB.\n",
+                            "maximum": 10240,
+                            "x-linode-cli-display": 4,
+                            "example": 30
+                          },
+                          "region": {
+                            "x-linode-cli-display": 5,
+                            "readOnly": true,
+                            "type": "string",
+                            "description": "The unique ID of this Region.",
+                            "example": "us-east"
+                          },
+                          "linode_id": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                            "example": 12346,
+                            "x-linode-cli-display": 6
+                          },
+                          "linode_label": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                            "example": "linode123",
+                            "x-linode-cli-display": 7,
+                            "readOnly": true
+                          },
+                          "created": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "When this Volume was created.",
+                            "example": "2018-01-01T00:01:01",
+                            "readOnly": true
+                          },
+                          "updated": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "When this Volume was last updated.",
+                            "example": "2018-01-01T00:01:01",
+                            "readOnly": true
+                          },
+                          "tags": {
+                            "x-linode-filterable": true,
+                            "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "example": [
+                              "example tag",
+                              "another example"
+                            ]
+                          },
+                          "hardware_type": {
+                            "type": "string",
+                            "enum": [
+                              "hdd",
+                              "nvme"
+                            ],
+                            "description": "The storage type of this Volume.",
+                            "example": "nvme",
+                            "readOnly": true
+                          }
+                        }
+                      }
+                    },
+                    "page": {
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The current [page](/docs/api/#pagination).",
+                      "example": 1
+                    },
+                    "pages": {
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The total number of [pages](/docs/api/#pagination).",
+                      "example": 1
+                    },
+                    "results": {
+                      "type": "integer",
+                      "readOnly": true,
+                      "description": "The total number of results.",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Authorization: Bearer $TOKEN\" \\\n    https://api.linode.com/v4/volumes\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes list\n"
+          }
+        ]
+      },
+      "post": {
+        "x-linode-charge": true,
+        "x-linode-grant": "add_volumes",
+        "summary": "Volume Create",
+        "description": "Creates a Volume on your Account. In order for this to complete successfully, your User must have the `add_volumes` grant. Creating a new Volume will start accruing additional charges on your account.\n",
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "createVolume",
+        "x-linode-cli-action": "create",
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_write"
+            ]
+          }
+        ],
+        "requestBody": {
+          "description": "The requested initial state of a new Volume.",
+          "required": true,
+          "x-linode-cli-allowed-defaults": [
+            "region"
+          ],
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "label"
+                ],
+                "properties": {
+                  "region": {
+                    "type": "string",
+                    "description": "The Region to deploy this Volume in. This is only required if a linode_id is not given.\n",
+                    "example": null
+                  },
+                  "linode_id": {
+                    "type": "integer",
+                    "description": "The Linode this volume should be attached to upon creation. If not given, the volume will be created without an attachment.\n",
+                    "example": 123
+                  },
+                  "size": {
+                    "type": "integer",
+                    "description": "The initial size of this volume, in GB.  Be aware that volumes may only be resized up after creation.\n",
+                    "example": 20,
+                    "default": 20
+                  },
+                  "label": {
+                    "type": "string",
+                    "description": "The Volume's label, which is also used in the `filesystem_path` of the resulting volume.\n",
+                    "example": "my-volume",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$"
+                  },
+                  "config_id": {
+                    "type": "integer",
+                    "description": "When creating a Volume attached to a Linode, the ID of the Linode Config to include the new Volume in. This Config must belong to the Linode referenced by `linode_id`. Must _not_ be provided if `linode_id` is not sent. If a `linode_id` is sent without a `config_id`, the volume will be attached:\n\n  * to the Linode's only config if it only has one config.\n  * to the Linode's last used config, if possible.\n\nIf no config can be selected for attachment, an error will be returned.\n",
+                    "example": 23456
+                  },
+                  "tags": {
+                    "x-linode-filterable": true,
+                    "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "example tag",
+                      "another example"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Creating Volume.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "A Block Storage Volume associated with your Account.\n",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique ID of this Volume.",
+                      "example": 12345,
+                      "readOnly": true,
+                      "x-linode-cli-display": 1
+                    },
+                    "label": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "description": "The Volume's label is for display purposes only.\n",
+                      "example": "my-volume",
+                      "minLength": 1,
+                      "maxLength": 32,
+                      "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                      "x-linode-cli-display": 2
+                    },
+                    "filesystem_path": {
+                      "type": "string",
+                      "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                      "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                      "readOnly": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                      "enum": [
+                        "creating",
+                        "active",
+                        "resizing"
+                      ],
+                      "example": "active",
+                      "readOnly": true,
+                      "x-linode-cli-display": 3,
+                      "x-linode-cli-color": {
+                        "active": "green",
+                        "contact_support": "red",
+                        "default_": "yellow"
+                      }
+                    },
+                    "size": {
+                      "type": "integer",
+                      "description": "The Volume's size, in GiB.\n",
+                      "maximum": 10240,
+                      "x-linode-cli-display": 4,
+                      "example": 30
+                    },
+                    "region": {
+                      "x-linode-cli-display": 5,
+                      "readOnly": true,
+                      "type": "string",
+                      "description": "The unique ID of this Region.",
+                      "example": "us-east"
+                    },
+                    "linode_id": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                      "example": 12346,
+                      "x-linode-cli-display": 6
+                    },
+                    "linode_label": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                      "example": "linode123",
+                      "x-linode-cli-display": 7,
+                      "readOnly": true
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was created.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "updated": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was last updated.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "tags": {
+                      "x-linode-filterable": true,
+                      "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "example tag",
+                        "another example"
+                      ]
+                    },
+                    "hardware_type": {
+                      "type": "string",
+                      "enum": [
+                        "hdd",
+                        "nvme"
+                      ],
+                      "description": "The storage type of this Volume.",
+                      "example": "nvme",
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $TOKEN\" \\\n    -X POST -d '{\n      \"label\": \"my-volume\",\n      \"size\": 20,\n      \"linode_id\": 12346\n    }' \\\n    https://api.linode.com/v4/volumes\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes create \\\n  --label my-volume \\\n  --size 20 \\\n  --linode_id 12346 \\\n  --no-defaults\n"
+          }
+        ]
+      }
+    },
+    "/volumes/{volumeId}": {
+      "parameters": [
+        {
+          "name": "volumeId",
+          "in": "path",
+          "description": "ID of the Volume to look up.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "x-linode-cli-command": "volumes",
+      "get": {
+        "x-linode-grant": "read_only",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of a collection to return.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items to return per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 25,
+              "maximum": 500,
+              "default": 100
+            }
+          }
+        ],
+        "tags": [
+          "Volumes"
+        ],
+        "summary": "Volume View",
+        "description": "Get information about a single Volume.\n",
+        "operationId": "getVolume",
+        "x-linode-cli-action": "view",
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_only"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single Volume object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "A Block Storage Volume associated with your Account.\n",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique ID of this Volume.",
+                      "example": 12345,
+                      "readOnly": true,
+                      "x-linode-cli-display": 1
+                    },
+                    "label": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "description": "The Volume's label is for display purposes only.\n",
+                      "example": "my-volume",
+                      "minLength": 1,
+                      "maxLength": 32,
+                      "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                      "x-linode-cli-display": 2
+                    },
+                    "filesystem_path": {
+                      "type": "string",
+                      "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                      "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                      "readOnly": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                      "enum": [
+                        "creating",
+                        "active",
+                        "resizing"
+                      ],
+                      "example": "active",
+                      "readOnly": true,
+                      "x-linode-cli-display": 3,
+                      "x-linode-cli-color": {
+                        "active": "green",
+                        "contact_support": "red",
+                        "default_": "yellow"
+                      }
+                    },
+                    "size": {
+                      "type": "integer",
+                      "description": "The Volume's size, in GiB.\n",
+                      "maximum": 10240,
+                      "x-linode-cli-display": 4,
+                      "example": 30
+                    },
+                    "region": {
+                      "x-linode-cli-display": 5,
+                      "readOnly": true,
+                      "type": "string",
+                      "description": "The unique ID of this Region.",
+                      "example": "us-east"
+                    },
+                    "linode_id": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                      "example": 12346,
+                      "x-linode-cli-display": 6
+                    },
+                    "linode_label": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                      "example": "linode123",
+                      "x-linode-cli-display": 7,
+                      "readOnly": true
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was created.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "updated": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was last updated.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "tags": {
+                      "x-linode-filterable": true,
+                      "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "example tag",
+                        "another example"
+                      ]
+                    },
+                    "hardware_type": {
+                      "type": "string",
+                      "enum": [
+                        "hdd",
+                        "nvme"
+                      ],
+                      "description": "The storage type of this Volume.",
+                      "example": "nvme",
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            },
+            "links": {
+              "attach": {
+                "operationId": "attachVolume",
+                "parameters": {
+                  "volumeID": "$request.body#/id"
+                }
+              },
+              "clone": {
+                "operationId": "cloneVolume",
+                "parameters": {
+                  "volumeId": "$request.body#/id"
+                }
+              },
+              "detach": {
+                "operationId": "detachVolume",
+                "parameters": {
+                  "volumeId": "$request.body#/id"
+                }
+              },
+              "resize": {
+                "operationId": "resizeVolume",
+                "parameters": {
+                  "volumeId": "$request.body#/id"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Authorization: Bearer $TOKEN\" \\\n    https://api.linode.com/v4/volumes/12345\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes view 12345\n"
+          }
+        ]
+      },
+      "put": {
+        "x-linode-grant": "read_write",
+        "tags": [
+          "Volumes"
+        ],
+        "summary": "Volume Update",
+        "description": "Updates a Volume that you have permission to `read_write`.\n",
+        "operationId": "updateVolume",
+        "x-linode-cli-action": "update",
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_write"
+            ]
+          }
+        ],
+        "requestBody": {
+          "description": "If any updated field fails to pass validation, the Volume will not be updated.\n",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "description": "A Block Storage Volume associated with your Account.\n",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The unique ID of this Volume.",
+                        "example": 12345,
+                        "readOnly": true,
+                        "x-linode-cli-display": 1
+                      },
+                      "label": {
+                        "x-linode-filterable": true,
+                        "type": "string",
+                        "description": "The Volume's label is for display purposes only.\n",
+                        "example": "my-volume",
+                        "minLength": 1,
+                        "maxLength": 32,
+                        "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                        "x-linode-cli-display": 2
+                      },
+                      "filesystem_path": {
+                        "type": "string",
+                        "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                        "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                        "readOnly": true
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                        "enum": [
+                          "creating",
+                          "active",
+                          "resizing"
+                        ],
+                        "example": "active",
+                        "readOnly": true,
+                        "x-linode-cli-display": 3,
+                        "x-linode-cli-color": {
+                          "active": "green",
+                          "contact_support": "red",
+                          "default_": "yellow"
+                        }
+                      },
+                      "size": {
+                        "type": "integer",
+                        "description": "The Volume's size, in GiB.\n",
+                        "maximum": 10240,
+                        "x-linode-cli-display": 4,
+                        "example": 30
+                      },
+                      "region": {
+                        "x-linode-cli-display": 5,
+                        "readOnly": true,
+                        "type": "string",
+                        "description": "The unique ID of this Region.",
+                        "example": "us-east"
+                      },
+                      "linode_id": {
+                        "type": "integer",
+                        "nullable": true,
+                        "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                        "example": 12346,
+                        "x-linode-cli-display": 6
+                      },
+                      "linode_label": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                        "example": "linode123",
+                        "x-linode-cli-display": 7,
+                        "readOnly": true
+                      },
+                      "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When this Volume was created.",
+                        "example": "2018-01-01T00:01:01",
+                        "readOnly": true
+                      },
+                      "updated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When this Volume was last updated.",
+                        "example": "2018-01-01T00:01:01",
+                        "readOnly": true
+                      },
+                      "tags": {
+                        "x-linode-filterable": true,
+                        "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "example": [
+                          "example tag",
+                          "another example"
+                        ]
+                      },
+                      "hardware_type": {
+                        "type": "string",
+                        "enum": [
+                          "hdd",
+                          "nvme"
+                        ],
+                        "description": "The storage type of this Volume.",
+                        "example": "nvme",
+                        "readOnly": true
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "size": {
+                        "readOnly": true
+                      },
+                      "linode_id": {
+                        "readOnly": true
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated Volume.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "A Block Storage Volume associated with your Account.\n",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique ID of this Volume.",
+                      "example": 12345,
+                      "readOnly": true,
+                      "x-linode-cli-display": 1
+                    },
+                    "label": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "description": "The Volume's label is for display purposes only.\n",
+                      "example": "my-volume",
+                      "minLength": 1,
+                      "maxLength": 32,
+                      "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                      "x-linode-cli-display": 2
+                    },
+                    "filesystem_path": {
+                      "type": "string",
+                      "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                      "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                      "readOnly": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                      "enum": [
+                        "creating",
+                        "active",
+                        "resizing"
+                      ],
+                      "example": "active",
+                      "readOnly": true,
+                      "x-linode-cli-display": 3,
+                      "x-linode-cli-color": {
+                        "active": "green",
+                        "contact_support": "red",
+                        "default_": "yellow"
+                      }
+                    },
+                    "size": {
+                      "type": "integer",
+                      "description": "The Volume's size, in GiB.\n",
+                      "maximum": 10240,
+                      "x-linode-cli-display": 4,
+                      "example": 30
+                    },
+                    "region": {
+                      "x-linode-cli-display": 5,
+                      "readOnly": true,
+                      "type": "string",
+                      "description": "The unique ID of this Region.",
+                      "example": "us-east"
+                    },
+                    "linode_id": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                      "example": 12346,
+                      "x-linode-cli-display": 6
+                    },
+                    "linode_label": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                      "example": "linode123",
+                      "x-linode-cli-display": 7,
+                      "readOnly": true
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was created.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "updated": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was last updated.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "tags": {
+                      "x-linode-filterable": true,
+                      "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "example tag",
+                        "another example"
+                      ]
+                    },
+                    "hardware_type": {
+                      "type": "string",
+                      "enum": [
+                        "hdd",
+                        "nvme"
+                      ],
+                      "description": "The storage type of this Volume.",
+                      "example": "nvme",
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $TOKEN\" \\\n    -X PUT -d '{\n      \"label\": \"my-volume\"\n    }' \\\n    https://api.linode.com/v4/volumes/12345\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes update 12345 \\\n  --label my_volume\n"
+          }
+        ]
+      },
+      "delete": {
+        "x-linode-grant": "read_write",
+        "tags": [
+          "Volumes"
+        ],
+        "summary": "Volume Delete",
+        "description": "Deletes a Volume you have permission to `read_write`.\n\n* **Deleting a Volume is a destructive action and cannot be undone.**\n\n* Deleting stops billing for the Volume. You will be billed for time used within\nthe billing period the Volume was active.\n\n* Volumes that are migrating cannot be deleted until the migration is finished.\n",
+        "operationId": "deleteVolume",
+        "x-linode-cli-action": [
+          "delete",
+          "rm"
+        ],
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_write"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Volume deletion successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $TOKEN\" \\\n    -X DELETE \\\n    https://api.linode.com/v4/volumes/12345\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes delete 12345\n"
+          }
+        ]
+      }
+    },
+    "/volumes/{volumeId}/attach": {
+      "parameters": [
+        {
+          "name": "volumeId",
+          "in": "path",
+          "description": "ID of the Volume to attach.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "x-linode-cli-command": "volumes",
+      "post": {
+        "summary": "Volume Attach",
+        "description": "Attaches a Volume on your Account to an existing Linode on your Account. In order for this request to complete successfully, your User must have `read_only` or `read_write` permission to the Volume and `read_write` permission to the Linode. Additionally, the Volume and Linode must be located in the same Region.\n",
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "attachVolume",
+        "x-linode-cli-action": "attach",
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_write",
+              "linodes:read_write"
+            ]
+          }
+        ],
+        "requestBody": {
+          "description": "Volume to attach to a Linode.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "linode_id"
+                ],
+                "properties": {
+                  "linode_id": {
+                    "type": "integer",
+                    "description": "The ID of the Linode to attach the volume to."
+                  },
+                  "config_id": {
+                    "type": "integer",
+                    "description": "The ID of the Linode Config to include this Volume in. Must belong to the Linode referenced by `linode_id`. If not given, the last booted Config will be chosen.\n",
+                    "example": 23456
+                  },
+                  "persist_across_boots": {
+                    "type": "boolean",
+                    "description": "Defaults to true, if false is provided, the Volume will not be attached to the Linode Config. In this case more than 8 Volumes may be attached to a Linode if a Linode has 16GB of RAM or more. The number of volumes that can be attached is equal to the number of GB of RAM that the Linode has, up to a maximum of 64. `config_id` should not be passed if this is set to false and linode_id must be passed. The Linode must be running.\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Volume was attached to a Linode.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "A Block Storage Volume associated with your Account.\n",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique ID of this Volume.",
+                      "example": 12345,
+                      "readOnly": true,
+                      "x-linode-cli-display": 1
+                    },
+                    "label": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "description": "The Volume's label is for display purposes only.\n",
+                      "example": "my-volume",
+                      "minLength": 1,
+                      "maxLength": 32,
+                      "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                      "x-linode-cli-display": 2
+                    },
+                    "filesystem_path": {
+                      "type": "string",
+                      "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                      "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                      "readOnly": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                      "enum": [
+                        "creating",
+                        "active",
+                        "resizing"
+                      ],
+                      "example": "active",
+                      "readOnly": true,
+                      "x-linode-cli-display": 3,
+                      "x-linode-cli-color": {
+                        "active": "green",
+                        "contact_support": "red",
+                        "default_": "yellow"
+                      }
+                    },
+                    "size": {
+                      "type": "integer",
+                      "description": "The Volume's size, in GiB.\n",
+                      "maximum": 10240,
+                      "x-linode-cli-display": 4,
+                      "example": 30
+                    },
+                    "region": {
+                      "x-linode-cli-display": 5,
+                      "readOnly": true,
+                      "type": "string",
+                      "description": "The unique ID of this Region.",
+                      "example": "us-east"
+                    },
+                    "linode_id": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                      "example": 12346,
+                      "x-linode-cli-display": 6
+                    },
+                    "linode_label": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                      "example": "linode123",
+                      "x-linode-cli-display": 7,
+                      "readOnly": true
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was created.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "updated": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was last updated.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "tags": {
+                      "x-linode-filterable": true,
+                      "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "example tag",
+                        "another example"
+                      ]
+                    },
+                    "hardware_type": {
+                      "type": "string",
+                      "enum": [
+                        "hdd",
+                        "nvme"
+                      ],
+                      "description": "The storage type of this Volume.",
+                      "example": "nvme",
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $TOKEN\" \\\n    -X POST -d '{\n      \"linode_id\": 12346,\n      \"config_id\": 23456\n    }' \\\n    https://api.linode.com/v4/volumes/12345/attach\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes attach 12345 \\\n  --linode_id 12346 \\\n  --config_id 23456\n"
+          }
+        ]
+      }
+    },
+    "/volumes/{volumeId}/clone": {
+      "parameters": [
+        {
+          "name": "volumeId",
+          "in": "path",
+          "description": "ID of the Volume to clone.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "x-linode-cli-command": "volumes",
+      "post": {
+        "x-linode-charge": true,
+        "x-linode-grant": "add_volumes",
+        "summary": "Volume Clone",
+        "description": "Creates a Volume on your Account. In order for this request to complete successfully, your User must have the `add_volumes` grant. The new Volume will have the same size and data as the source Volume. Creating a new Volume will incur a charge on your Account.\n* Only Volumes with a `status` of \"active\" can be cloned.\n",
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "cloneVolume",
+        "x-linode-cli-action": "clone",
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_write"
+            ]
+          }
+        ],
+        "requestBody": {
+          "description": "The requested state your Volume will be cloned into.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "label"
+                ],
+                "properties": {
+                  "label": {
+                    "x-linode-filterable": true,
+                    "type": "string",
+                    "description": "The Volume's label is for display purposes only.\n",
+                    "example": "my-volume",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                    "x-linode-cli-display": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Clone started.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "A Block Storage Volume associated with your Account.\n",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique ID of this Volume.",
+                      "example": 12345,
+                      "readOnly": true,
+                      "x-linode-cli-display": 1
+                    },
+                    "label": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "description": "The Volume's label is for display purposes only.\n",
+                      "example": "my-volume",
+                      "minLength": 1,
+                      "maxLength": 32,
+                      "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                      "x-linode-cli-display": 2
+                    },
+                    "filesystem_path": {
+                      "type": "string",
+                      "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                      "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                      "readOnly": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                      "enum": [
+                        "creating",
+                        "active",
+                        "resizing"
+                      ],
+                      "example": "active",
+                      "readOnly": true,
+                      "x-linode-cli-display": 3,
+                      "x-linode-cli-color": {
+                        "active": "green",
+                        "contact_support": "red",
+                        "default_": "yellow"
+                      }
+                    },
+                    "size": {
+                      "type": "integer",
+                      "description": "The Volume's size, in GiB.\n",
+                      "maximum": 10240,
+                      "x-linode-cli-display": 4,
+                      "example": 30
+                    },
+                    "region": {
+                      "x-linode-cli-display": 5,
+                      "readOnly": true,
+                      "type": "string",
+                      "description": "The unique ID of this Region.",
+                      "example": "us-east"
+                    },
+                    "linode_id": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                      "example": 12346,
+                      "x-linode-cli-display": 6
+                    },
+                    "linode_label": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                      "example": "linode123",
+                      "x-linode-cli-display": 7,
+                      "readOnly": true
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was created.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "updated": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was last updated.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "tags": {
+                      "x-linode-filterable": true,
+                      "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "example tag",
+                        "another example"
+                      ]
+                    },
+                    "hardware_type": {
+                      "type": "string",
+                      "enum": [
+                        "hdd",
+                        "nvme"
+                      ],
+                      "description": "The storage type of this Volume.",
+                      "example": "nvme",
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $TOKEN\" \\\n    -X POST -d '{\n      \"label\": \"my-volume\"\n    }' \\\n    https://api.linode.com/v4/volumes/12345/clone\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes clone 12345 \\\n  --label my-volume\n"
+          }
+        ]
+      }
+    },
+    "/volumes/{volumeId}/detach": {
+      "parameters": [
+        {
+          "name": "volumeId",
+          "in": "path",
+          "description": "ID of the Volume to detach.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "x-linode-cli-command": "volumes",
+      "post": {
+        "summary": "Volume Detach",
+        "description": "Detaches a Volume on your Account from a Linode on your Account. In order for this request to complete successfully, your User must have `read_write` access to the Volume and `read_write` access to the Linode.\n",
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "detachVolume",
+        "x-linode-cli-action": "detach",
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_write",
+              "linodes:read_write"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Volume was detached from a Linode.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $TOKEN\" \\\n    -X POST \\\n    https://api.linode.com/v4/volumes/12345/detach\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes detach 12345\n"
+          }
+        ]
+      }
+    },
+    "/volumes/{volumeId}/resize": {
+      "parameters": [
+        {
+          "name": "volumeId",
+          "in": "path",
+          "description": "ID of the Volume to resize.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "x-linode-cli-command": "volumes",
+      "post": {
+        "x-linode-charge": true,
+        "summary": "Volume Resize",
+        "description": "Resize an existing Volume on your Account. In order for this request to complete successfully, your User must have the `read_write` permissions to the Volume.\n* Volumes can only be resized up.\n* Only Volumes with a `status` of \"active\" can be resized.\n",
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "resizeVolume",
+        "x-linode-cli-action": "resize",
+        "security": [
+          {
+            "personalAccessToken": []
+          },
+          {
+            "oauth": [
+              "volumes:read_write"
+            ]
+          }
+        ],
+        "requestBody": {
+          "description": "The requested size to increase your Volume to.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "size"
+                ],
+                "properties": {
+                  "size": {
+                    "type": "integer",
+                    "description": "The Volume's size, in GiB.\n",
+                    "maximum": 10240,
+                    "x-linode-cli-display": 4,
+                    "example": 30
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Volume resize started.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "A Block Storage Volume associated with your Account.\n",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique ID of this Volume.",
+                      "example": 12345,
+                      "readOnly": true,
+                      "x-linode-cli-display": 1
+                    },
+                    "label": {
+                      "x-linode-filterable": true,
+                      "type": "string",
+                      "description": "The Volume's label is for display purposes only.\n",
+                      "example": "my-volume",
+                      "minLength": 1,
+                      "maxLength": 32,
+                      "pattern": "^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$",
+                      "x-linode-cli-display": 2
+                    },
+                    "filesystem_path": {
+                      "type": "string",
+                      "description": "The full filesystem path for the Volume based on the Volume's label. Path is /dev/disk/by-id/scsi-0Linode_Volume_ + Volume label.\n",
+                      "example": "/dev/disk/by-id/scsi-0Linode_Volume_my-volume",
+                      "readOnly": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The current status of the volume.  Can be one of:\n\n  * `creating` - the Volume is being created and is not yet available\n    for use.\n  * `active` - the Volume is online and available for use.\n  * `resizing` - the Volume is in the process of upgrading\n    its current capacity.\n",
+                      "enum": [
+                        "creating",
+                        "active",
+                        "resizing"
+                      ],
+                      "example": "active",
+                      "readOnly": true,
+                      "x-linode-cli-display": 3,
+                      "x-linode-cli-color": {
+                        "active": "green",
+                        "contact_support": "red",
+                        "default_": "yellow"
+                      }
+                    },
+                    "size": {
+                      "type": "integer",
+                      "description": "The Volume's size, in GiB.\n",
+                      "maximum": 10240,
+                      "x-linode-cli-display": 4,
+                      "example": 30
+                    },
+                    "region": {
+                      "x-linode-cli-display": 5,
+                      "readOnly": true,
+                      "type": "string",
+                      "description": "The unique ID of this Region.",
+                      "example": "us-east"
+                    },
+                    "linode_id": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the ID of that Linode will be displayed here.\n",
+                      "example": 12346,
+                      "x-linode-cli-display": 6
+                    },
+                    "linode_label": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "If a Volume is attached to a specific Linode, the label of that Linode will be displayed here.\n",
+                      "example": "linode123",
+                      "x-linode-cli-display": 7,
+                      "readOnly": true
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was created.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "updated": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "When this Volume was last updated.",
+                      "example": "2018-01-01T00:01:01",
+                      "readOnly": true
+                    },
+                    "tags": {
+                      "x-linode-filterable": true,
+                      "description": "An array of Tags applied to this object.  Tags are for organizational purposes only.\n",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "example tag",
+                        "another example"
+                      ]
+                    },
+                    "hardware_type": {
+                      "type": "string",
+                      "enum": [
+                        "hdd",
+                        "nvme"
+                      ],
+                      "description": "The storage type of this Volume.",
+                      "example": "nvme",
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "An object for describing a single error that occurred during the processing of a request.\n",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "description": "What happened to cause this error. In most cases, this can be fixed immediately by changing the data you sent in the request, but in some cases you will be instructed to [open a Support Ticket](/docs/api/support/#support-ticket-open) or perform some other action before you can complete the request successfully.\n",
+                            "example": "fieldname must be a valid value"
+                          },
+                          "field": {
+                            "type": "string",
+                            "description": "The field in the request that caused this error. This may be a path, separated by periods in the case of nested fields. In some cases this may come back as \"null\" if the error is not specific to any single element of the request.\n",
+                            "example": "fieldname"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $TOKEN\" \\\n    -X POST -d '{\n      \"size\": 30\n    }' \\\n    https://api.linode.com/v4/volumes/12345/resize\n"
+          },
+          {
+            "lang": "CLI",
+            "source": "linode-cli volumes resize 12345 \\\n  --size 30\n"
+          }
+        ]
+      }
     }
   },
   "components": {

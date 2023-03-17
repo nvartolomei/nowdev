@@ -456,6 +456,15 @@ Class | Method | HTTP request | Description
 *LinodeInstancesApi* | [**update_linode_ip**](docs/LinodeInstancesApi.md#update_linode_ip) | **PUT** /linode/instances/{linodeId}/ips/{address} | IP Address Update
 *LinodeTypesApi* | [**get_linode_type**](docs/LinodeTypesApi.md#get_linode_type) | **GET** /linode/types/{typeId} | Type View
 *LinodeTypesApi* | [**get_linode_types**](docs/LinodeTypesApi.md#get_linode_types) | **GET** /linode/types | Types List
+*VolumesApi* | [**attach_volume**](docs/VolumesApi.md#attach_volume) | **POST** /volumes/{volumeId}/attach | Volume Attach
+*VolumesApi* | [**clone_volume**](docs/VolumesApi.md#clone_volume) | **POST** /volumes/{volumeId}/clone | Volume Clone
+*VolumesApi* | [**create_volume**](docs/VolumesApi.md#create_volume) | **POST** /volumes | Volume Create
+*VolumesApi* | [**delete_volume**](docs/VolumesApi.md#delete_volume) | **DELETE** /volumes/{volumeId} | Volume Delete
+*VolumesApi* | [**detach_volume**](docs/VolumesApi.md#detach_volume) | **POST** /volumes/{volumeId}/detach | Volume Detach
+*VolumesApi* | [**get_volume**](docs/VolumesApi.md#get_volume) | **GET** /volumes/{volumeId} | Volume View
+*VolumesApi* | [**get_volumes**](docs/VolumesApi.md#get_volumes) | **GET** /volumes | Volumes List
+*VolumesApi* | [**resize_volume**](docs/VolumesApi.md#resize_volume) | **POST** /volumes/{volumeId}/resize | Volume Resize
+*VolumesApi* | [**update_volume**](docs/VolumesApi.md#update_volume) | **PUT** /volumes/{volumeId} | Volume Update
 
 
 ## Documentation For Models
@@ -468,15 +477,18 @@ Class | Method | HTTP request | Description
  - [AddLinodeDiskRequest](docs/AddLinodeDiskRequest.md)
  - [AddLinodeDiskRequestAllOf](docs/AddLinodeDiskRequestAllOf.md)
  - [AddLinodeIpRequest](docs/AddLinodeIpRequest.md)
+ - [AttachVolumeRequest](docs/AttachVolumeRequest.md)
  - [AuthorizedApp](docs/AuthorizedApp.md)
  - [Backup](docs/Backup.md)
  - [BootLinodeInstanceRequest](docs/BootLinodeInstanceRequest.md)
  - [CloneLinodeInstanceRequest](docs/CloneLinodeInstanceRequest.md)
+ - [CloneVolumeRequest](docs/CloneVolumeRequest.md)
  - [CreateLinodeInstanceRequest](docs/CreateLinodeInstanceRequest.md)
  - [CreateLinodeInstanceRequestAllOf](docs/CreateLinodeInstanceRequestAllOf.md)
  - [CreateLinodeInstanceRequestAllOf1](docs/CreateLinodeInstanceRequestAllOf1.md)
  - [CreateLinodeInstanceRequestAllOf1InterfacesInner](docs/CreateLinodeInstanceRequestAllOf1InterfacesInner.md)
  - [CreateSnapshotRequest](docs/CreateSnapshotRequest.md)
+ - [CreateVolumeRequest](docs/CreateVolumeRequest.md)
  - [CreditCard](docs/CreditCard.md)
  - [CreditCardData](docs/CreditCardData.md)
  - [Database](docs/Database.md)
@@ -664,6 +676,7 @@ Class | Method | HTTP request | Description
  - [ResetLinodePasswordRequest](docs/ResetLinodePasswordRequest.md)
  - [ResizeDiskRequest](docs/ResizeDiskRequest.md)
  - [ResizeLinodeInstanceRequest](docs/ResizeLinodeInstanceRequest.md)
+ - [ResizeVolumeRequest](docs/ResizeVolumeRequest.md)
  - [RestoreBackupRequest](docs/RestoreBackupRequest.md)
  - [SecurityQuestion](docs/SecurityQuestion.md)
  - [SecurityQuestionsGet](docs/SecurityQuestionsGet.md)
@@ -686,6 +699,8 @@ Class | Method | HTTP request | Description
  - [Transfer](docs/Transfer.md)
  - [TrustedDevice](docs/TrustedDevice.md)
  - [UpdateLinodeIpRequest](docs/UpdateLinodeIpRequest.md)
+ - [UpdateVolumeRequest](docs/UpdateVolumeRequest.md)
+ - [UpdateVolumeRequestAllOf](docs/UpdateVolumeRequestAllOf.md)
  - [User](docs/User.md)
  - [UserDefinedField](docs/UserDefinedField.md)
  - [Vlans](docs/Vlans.md)
