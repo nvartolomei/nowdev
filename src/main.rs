@@ -143,6 +143,7 @@ async fn main() -> Result<()> {
             let mut ssh_config = std::fs::OpenOptions::new()
                 .write(true)
                 .create(true)
+                .truncate(true)
                 .open(
                     dirs::home_dir()
                         .with_context(|| "failed to infer user home dir".to_string())?
