@@ -166,7 +166,7 @@ async fn main() -> Result<()> {
             println!("Writing ssh configuration to ~/.ssh/config_nowdev");
         }
         Command::Stop(_) => {
-            let instance = find_instance(&linode_cfg, "dev").await?;
+            let instance = find_instance(&linode_cfg, "nowdev-dev").await?;
             if instance.is_none() {
                 println!("Instance not found");
                 return Ok(());
@@ -185,7 +185,7 @@ async fn main() -> Result<()> {
             println!("Instance deleted");
         }
         Command::Stats(_) => {
-            let instance = find_instance(&linode_cfg, "dev").await?;
+            let instance = find_instance(&linode_cfg, "nowdev-dev").await?;
             if instance.is_none() {
                 println!("Instance not found");
                 return Ok(());
