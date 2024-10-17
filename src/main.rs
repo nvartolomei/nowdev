@@ -59,6 +59,9 @@ enum Command {
 async fn main() -> Result<()> {
     let args = Args::parse();
 
+    let ssh_config_path = dirs::home_dir()
+        .with_context(|| "failed to infer user home dir".to_string())?
+        .join(".ssh/config_nowdev");
     let token_path = dirs::home_dir()
         .with_context(|| "failed to infer user config dir".to_string())?
         .join(".config/nowdev/token");
@@ -140,12 +143,8 @@ async fn main() -> Result<()> {
             println!("https://cloud.linode.com/linodes/{}", instance.id.unwrap());
             println!("IP: {}", ipv4.as_str());
 
-            let mut ssh_config = File::create(
-                dirs::home_dir()
-                    .with_context(|| "failed to infer user home dir".to_string())?
-                    .join(".ssh/config_nowdev"),
-            )
-            .with_context(|| "failed to open ssh config file".to_string())?;
+            let mut ssh_config = File::create(ssh_config_path)
+                .with_context(|| "failed to open ssh config file".to_string())?;
             ssh_config.write_all(
                 formatdoc! {"
             Host nowdev-dev
@@ -163,6 +162,11 @@ async fn main() -> Result<()> {
             println!("Writing ssh configuration to ~/.ssh/config_nowdev");
         }
         Command::Stop(_) => {
+            if ssh_config_path.exists() {
+                std::fs::remove_file(ssh_config_path)
+                    .with_context(|| "failed to remove ssh config file".to_string())?;
+            }
+
             let instance = find_instance(&linode_cfg, "nowdev-dev").await?;
             if instance.is_none() {
                 println!("Instance not found");
