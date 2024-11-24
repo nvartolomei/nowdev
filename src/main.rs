@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::{anyhow, Context, Result};
 use chrono::{DateTime, Utc};
 use clap::Parser;
 use indoc::formatdoc;
@@ -160,6 +160,23 @@ async fn main() -> Result<()> {
                 .as_bytes(),
             )?;
             println!("Writing ssh configuration to ~/.ssh/config_nowdev");
+
+            loop {
+                let instance = find_instance(&linode_cfg, "nowdev-dev").await?;
+                match instance {
+                    Some(instance) => {
+                        println!("Instance status: {:?}", instance.status.as_ref().unwrap());
+                        if *instance.status.as_ref().unwrap() == linode_api::models::get_linode_instances_200_response_data_inner::Status::Running {
+                            return Ok(())
+                        } else {
+                            tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+                        }
+                    }
+                    None => {
+                        return Err(anyhow!("Instance not found"));
+                    }
+                }
+            }
         }
         Command::Stop(_) => {
             if ssh_config_path.exists() {
